@@ -1,5 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
+import dayjs from 'dayjs';
 
 export default function EditTraining(props) {
     const [training, setTraining] = useState({ date: '', activity: '', duration: '', customer: '' });
@@ -7,7 +8,7 @@ export default function EditTraining(props) {
     useEffect(() => {
         if (props.training) {
             setTraining({
-                date: props.training.date,
+                date:  dayjs(props.training.date).format('YYYY-MM-DDTHH:mm'),
                 activity: props.training.activity,
                 duration: props.training.duration,
                 customer: props.training.customer
@@ -30,7 +31,7 @@ export default function EditTraining(props) {
             onClose={props.handleClose}
         >
             <DialogTitle>Edit Training</DialogTitle>
-            <DialogContent>
+            <DialogContent style={{ paddingTop: '20px' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <TextField
@@ -52,7 +53,7 @@ export default function EditTraining(props) {
                         <TextField label='Duration' name='duration' value={training.duration} onChange={handleInputChange} fullWidth />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField label='Customer Reference' name='customer' value={training.customer} onChange={handleInputChange} fullWidth />
+                        <TextField label='Customer Name' name='customer' value={training.customer} onChange={handleInputChange} fullWidth />
                     </Grid>
                 </Grid>
             </DialogContent>

@@ -1,4 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem, TextField, Select } from "@mui/material";
+
 import { useState } from "react";
 
 export default function AddTraining(props) {
@@ -7,7 +8,7 @@ export default function AddTraining(props) {
         date: '',
         activity: '',
         duration: '',
-        customer: ''
+        customer: { firstname: '' }
     });
     const [open, setOpen] = useState(false);
 
@@ -20,20 +21,32 @@ export default function AddTraining(props) {
         setTraining({ ...training, [event.target.name]: event.target.value });
     };
 
-    const handleSave = () => {
+    const clearForm = () => {
+        setTraining({
+          date: '',
+          activity: '',
+          duration: '',
+          customer: { firstname: '' }
+        });
+      };
+      
+
+      const handleSave = () => {
         props.addTraining(training);
+        clearForm();
         setOpen(false);
-    };
+      };
+      
 
     // Return
     // Add button
     // Dialog
     return (
         <>
-            <Button onClick={() => setOpen(true)}>Add New Training</Button>
+            <Button onClick={() => {setOpen(true); clearForm();}}>Add New Training</Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>New Training</DialogTitle>
-                <DialogContent>
+                <DialogContent style={{ paddingTop: '20px' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
@@ -55,7 +68,22 @@ export default function AddTraining(props) {
                             <TextField label='Duration' name='duration' value={training.duration} onChange={handleInputChange} fullWidth />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField label='Customer Reference' name='customer' value={training.customer} onChange={handleInputChange} fullWidth />
+                            <Select 
+                                label='Customer'
+                                name='customer'
+                                value={training.customer} 
+                                onChange={handleInputChange} 
+                                fullWidth 
+                            >
+                                {props.customers.map((customer, index) => (
+                                    <MenuItem 
+                                        key={index} 
+                                        value={customer.links[0].href}
+                                    >
+                                    {`${customer.firstname} ${customer.lastname}`}
+                                </MenuItem>
+                               ))}
+                            </Select>
                         </Grid>
                     </Grid>
                 </DialogContent>

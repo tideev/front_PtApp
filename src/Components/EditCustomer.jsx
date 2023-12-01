@@ -34,7 +34,7 @@ export default function EditCustomer(props) {
             onClose={props.handleClose}
         >
             <DialogTitle>Edit Customer</DialogTitle>
-            <DialogContent>
+            <DialogContent style={{ paddingTop: '20px' }}>
                 <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <TextField label='Firstname' name='firstname' value={customer.firstname} onChange={handleInputChange} fullWidth />

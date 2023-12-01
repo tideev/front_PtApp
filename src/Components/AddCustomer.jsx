@@ -23,9 +23,23 @@ export default function AddCustomer(props) {
         setCustomer({ ...customer, [event.target.name]: event.target.value });
     };
 
+    const clearForm = () => {
+        setCustomer({
+          firstname: '',
+          lastname: '',
+          streetaddress: '',
+          postcode: '',
+          city: '',
+          email: '',
+          phone: ''
+        });
+      };
+      
+
     const handleSave = () => {
         props.addCustomer(customer);
         setOpen(false);
+        clearForm();
     };
 
     //return
@@ -33,10 +47,10 @@ export default function AddCustomer(props) {
     //dialog
     return (
         <>
-            <Button onClick={() => setOpen(true)}>Add New Customer</Button>
+             <Button onClick={() => { setOpen(true); clearForm(); }}>Add New Customer</Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>New Customer</DialogTitle>
-                <DialogContent>
+                <DialogContent style={{ paddingTop: '20px' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <TextField label='Firstname' name='firstname' value={customer.firstname} onChange={handleInputChange} fullWidth />

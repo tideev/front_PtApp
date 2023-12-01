@@ -3,28 +3,48 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { Snackbar } from "@mui/material";
 import dayjs from 'dayjs';
 import AddTraining from "./AddTraining";
 import EditTraining from "./EditTraining"
 
+
 export default function TrainingList() {
     // State variables
     const [trainings, setTrainings] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [msg, setMsg] = useState('');
-    const [selectedTraining, setSelectedTraining] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [selectedTraining, setSelectedTraining] = useState(null);
+  const [customers, setCustomers] = useState([]);
+
 
     const dateFormatter = (params) => {
-        return dayjs(params.value).format('DD.MM.YYYY HH:mm');
+        return dayjs(params.value).format('DD-MM-YYYY HH:mm');
     }
+    
 
     // Columns for ag-grid
     const columns = [
-        { field: 'date', valueFormatter: dateFormatter, sortable: true, filter: true, floatingFilter: true},
-        { field: 'customer.firstname', headerName: 'Customer Name', sortable: true, filter: true, floatingFilter: true }, 
+        { field: 'date', valueFormatter: dateFormatter, sortable: true, filter: true, floatingFilter: true },
+        {
+            headerName: 'Customer', field: "customer",
+            valueGetter: params => {
+              const customer = params.data.customer;
+              if (customer && customer.firstname && customer.lastname) {
+                return `${customer.firstname} ${customer.lastname}`;
+              } else {
+                return ''; 
+              }
+            },
+            sortable: true,
+            filter: true,
+            floatingFilter: true,
+          },
+          
         { field: 'activity', sortable: true, filter: true, floatingFilter: true },
-        { field: 'duration', sortable: true, filter: true, floatingFilter: true}, // Display customer's name
+        { field: 'duration', sortable: true, filter: true, floatingFilter: true },
         {
             cellRenderer: params => (
                 <>
@@ -35,7 +55,7 @@ export default function TrainingList() {
                         updateTraining={updateTraining}
                     />
                     <Button size="small" color="info" onClick={() => setSelectedTraining(params.data)}>
-                        Edit
+                        <EditIcon /> Edit
                     </Button>
                 </>
             ),
@@ -43,30 +63,35 @@ export default function TrainingList() {
         },
         {
             cellRenderer: params => (
-                <Button size="small" color="error" onClick={() => deleteTraining(params.data.id)}>
-                    Delete
+                <Button size="small" color="error" onClick={() => deleteTraining(params)}>
+                    <DeleteIcon /> Delete
                 </Button>
             ),
-            width: 120
+            width: 140
         }
     ];
-
-    useEffect(() => getTrainings(), []);
-
-    const url = 'https://traineeapp.azurewebsites.net/gettrainings';
-
+    
     const getTrainings = () => {
-        fetch(url)
+        fetch('https://traineeapp.azurewebsites.net/gettrainings')
             .then(response => response.json())
-            .then(responseData => {
-                setTrainings(responseData);
+            .then(data => {
+                setTrainings(data);
             })
             .catch(err => console.error(err));
     }
 
-    const deleteTraining = (trainingId) => {
-        if (window.confirm('Are you sure?')) {
-            fetch(`${url}/${trainingId}`, { method: 'DELETE' })
+    useEffect(() =>
+    getTrainings(), []);
+
+    useEffect(() => {
+        getCustomers();
+    }, []);
+
+    const url = 'https://traineeapp.azurewebsites.net/api/trainings/';
+
+    const deleteTraining = (params) => {
+        if(window.confirm("Are you sure you want to delete this training?")) {
+            fetch(`${url}${params.data.id}`, {method: 'DELETE'})
                 .then(response => {
                     if (response.ok) {
                         setMsg('Training is deleted successfully!');
@@ -87,16 +112,19 @@ export default function TrainingList() {
             body: JSON.stringify(training)
         })
             .then(response => {
-                if (response.ok)
+                if (response.ok){
+                    setMsg('Training is added successfully!');
+                    setOpen(true);
                     getTrainings();
-                else
+
+                }else
                     alert('Something went wrong.')
             })
             .catch(err => console.error(err));
     }
 
     const updateTraining = (training) => {
-        fetch(`${url}/${training.id}`, {
+        fetch(`${url}${training.id}`, {
             method: 'PUT',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify(training)
@@ -105,7 +133,6 @@ export default function TrainingList() {
                 if (response.ok) {
                     setMsg('Training is updated successfully!');
                     setOpen(true);
-                    setSelectedTraining(null);
                     getTrainings();
                 } else {
                     alert('Something went wrong in update: ' + response.status);
@@ -114,10 +141,20 @@ export default function TrainingList() {
             .catch(err => console.error(err));
     }
 
+    const getCustomers = () => {
+        fetch('https://traineeapp.azurewebsites.net/api/customers')
+            .then(response => response.json())
+            .then(responseData => {
+                setCustomers(responseData.content);
+            })
+            .catch(err => console.error(err));
+
+    }
+
     return (
         <>
-            <AddTraining addTraining={addTraining} />
-            <div className="ag-theme-material" style={{ height: '700px', width: '90%', margin: 'auto' }}>
+            <AddTraining addTraining={addTraining} customers={customers} />
+            <div className="ag-theme-material" style={{ height: '700px', width: '95%', margin: 'auto' }}>
                 {trainings.length > 0 ? (
                     <AgGridReact
                         rowData={trainings}

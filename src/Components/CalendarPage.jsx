@@ -18,12 +18,21 @@ const CalendarPage = () => {
   }, []); //  useEffect suoritetaan vain kerran komponentin ensimmäisellä renderöinnillä
 
   // harjoitukset tapahtumiksi kalenteria varten
-  const events = trainings.map(training => ({
-    title: `${training.activity} / ${training.customer.firstname} ${training.customer.lastname} `,
-    start: new Date(training.date),
-    end: moment(training.date).add(training.duration, 'minutes').toDate(),
-  }));
-
+  const events = trainings.map(training => {
+    let title;
+    if (training.customer) {
+      title = `${training.activity} / ${training.customer.firstname} ${training.customer.lastname}`;
+    } else {
+      title = `${training.activity} (Customer null)`;
+    }
+  
+    return {
+      title: title,
+      start: new Date(training.date),
+      end: moment(training.date).add(training.duration, 'minutes').toDate(),
+    };
+  });
+  
 
   return (
     <div style={{ height: '700px', width: '90%', margin: 'auto' }}>

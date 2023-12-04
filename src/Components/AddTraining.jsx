@@ -77,7 +77,7 @@ export default function AddTraining(props) {
                                 value={training.duration} 
                                 onChange={handleInputChange} 
                                 fullWidth 
-                            />
+                                />
                         </Grid>
                         <Grid item xs={12}>
                             <Select

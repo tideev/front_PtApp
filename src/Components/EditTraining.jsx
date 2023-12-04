@@ -47,32 +47,33 @@ export default function EditTraining(props) {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField 
-                            label='Activity' 
-                            name='activity' 
-                            value={training.activity} 
-                            onChange={handleInputChange} 
-                            fullWidth 
+                        <TextField
+                            label='Activity'
+                            name='activity'
+                            value={training.activity}
+                            onChange={handleInputChange}
+                            fullWidth
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField 
-                            label='Duration' 
-                            name='duration' 
-                            value={training.duration}  
-                            onChange={handleInputChange} 
-                            fullWidth 
+                        <TextField
+                            label='Duration'
+                            name='duration'
+                            value={training.duration}
+                            onChange={handleInputChange}
+                            fullWidth
                         />
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
                             label='Customer Name'
                             name='customer'
-                            value={`${training.customer.firstname} ${training.customer.lastname}`}
+                            value={training.customer ? `${training.customer.firstname} ${training.customer.lastname}` : ''}
                             onChange={handleInputChange}
                             fullWidth
                         />
                     </Grid>
+
                 </Grid>
             </DialogContent>
             <DialogActions>

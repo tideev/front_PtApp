@@ -23,27 +23,27 @@ export default function AddTraining(props) {
 
     const clearForm = () => {
         setTraining({
-          date: '',
-          activity: '',
-          duration: '',
-          customer: { firstname: '' }
+            date: '',
+            activity: '',
+            duration: '',
+            customer: { firstname: '' }
         });
-      };
-      
+    };
 
-      const handleSave = () => {
+
+    const handleSave = () => {
         props.addTraining(training);
         clearForm();
         setOpen(false);
-      };
-      
+    };
+
 
     // Return
     // Add button
     // Dialog
     return (
         <>
-            <Button onClick={() => {setOpen(true); clearForm();}}>Add New Training</Button>
+            <Button onClick={() => { setOpen(true); clearForm(); }}>Add New Training</Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>New Training</DialogTitle>
                 <DialogContent style={{ paddingTop: '20px' }}>
@@ -62,27 +62,39 @@ export default function AddTraining(props) {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField label='Activity' name='activity' value={training.activity} onChange={handleInputChange} fullWidth />
+                            <TextField 
+                            label='Activity' 
+                            name='activity' 
+                            value={training.activity} 
+                            onChange={handleInputChange} 
+                            fullWidth 
+                            />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField label='Duration' name='duration' value={training.duration} onChange={handleInputChange} fullWidth />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Select 
-                                label='Customer'
-                                name='customer'
-                                value={training.customer} 
+                            <TextField 
+                                label='Duration' 
+                                name='duration' 
+                                value={training.duration} 
                                 onChange={handleInputChange} 
                                 fullWidth 
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Select
+                                label='Customer'
+                                name='customer'
+                                value={training.customer}
+                                onChange={handleInputChange}
+                                fullWidth
                             >
                                 {props.customers.map((customer, index) => (
-                                    <MenuItem 
-                                        key={index} 
+                                    <MenuItem
+                                        key={index}
                                         value={customer.links[0].href}
                                     >
-                                    {`${customer.firstname} ${customer.lastname}`}
-                                </MenuItem>
-                               ))}
+                                        {`${customer.firstname} ${customer.lastname}`}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </Grid>
                     </Grid>

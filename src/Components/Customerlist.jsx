@@ -33,13 +33,13 @@ export default function Customerlist() {
             cellRenderer: params => (
                 <>
                     <AddTrainingToCustomer
-                        customer={params.data} // Pass the customer details to the AddTrainingToCustomer component
-                        addTraining={(customer, training) => addTrainingToCustomer(params.data.links[0].href, training)} // Pass a function to handle adding training to the customer
+                        customer={params.data} // customer details to the AddTrainingToCustomer component
+                        addTraining={(customer, training) => addTrainingToCustomer(params.data.links[0].href, training)} // function to handle adding training to the customer
 
                     />
                 </>
             ),
-            width: 130
+            width: 170
         },
         {
             cellRenderer: params => (
@@ -50,20 +50,20 @@ export default function Customerlist() {
                         handleClose={() => setSelectedCustomer(null)}
                         updateCustomer={updatedCustomer => updateCustomer(params.data.links[0].href, updatedCustomer)}
                     />
-                    <Button size="small" color="info" onClick={() => setSelectedCustomer(params.data)}>
+                    <Button size="small" variant="outlined" onClick={() => setSelectedCustomer(params.data)}>
                         <EditIcon /> Edit
                     </Button>
                 </>
             ),
-            width: 120
+            width: 130
         },
         {
             cellRenderer: params => (
-                <Button size="small" color="error" onClick={() => deleteCustomer(params.data.links[0].href)}>
+                <Button size="small" color="error" variant="outlined" onClick={() => deleteCustomer(params.data.links[0].href)}>
                     <DeleteIcon /> Delete
                 </Button>
             ),
-            width: 140
+            width: 150
         }
 
     ];
@@ -98,7 +98,7 @@ export default function Customerlist() {
         }
     }
 
-    const addTrainingToCustomer = ( customer, training) => {
+    const addTrainingToCustomer = (customer, training) => {
         const trainingData = {
             date: training.date,
             duration: training.duration,
@@ -108,7 +108,7 @@ export default function Customerlist() {
                 firstname: customer.firstname,
                 lastname: customer.lastname
             },
-          };
+        };
         fetch(`https://traineeapp.azurewebsites.net/api/trainings/`, {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
@@ -130,7 +130,7 @@ export default function Customerlist() {
             })
             .catch(err => console.error(err));
     };
-    
+
 
 
     const addCustomer = (customer) => {
@@ -169,7 +169,9 @@ export default function Customerlist() {
     }
 
 
+    // Funktion määrittely, joka vie asiakastiedot CSV-muotoon
     const exportToCSV = () => {
+        // Muodostetaan asiakkaista taulukko, jossa asiakas on objekti ja  objekti sisältää tietyt tiedot
         const csvData = customers.map(customer => ({
             firstname: customer.firstname,
             lastname: customer.lastname,
@@ -179,21 +181,29 @@ export default function Customerlist() {
             phone: customer.phone,
         }));
 
+        // Muodostetaan CSV-tiedoston sisältö
         const csvContent = "data:text/csv;charset=utf-8," +
+            // Otsikot
             Object.keys(csvData[0]).map(key => key).join(", ") + "\n" +
+            // Jokainen rivi = yhtä asiakasta ja asiakkaan tiedot ovat pilkuilla eroteltuna
             csvData.map(customer => Object.values(customer).join(", ")).join("\n");
 
+        // CSV-sisältö URI-muotoon
         const encodedUri = encodeURI(csvContent);
+
+        // Luodaan uusi linkki elementti
         const link = document.createElement("a");
+        // Asetetaan linkille tarvittavat attribuutit
         link.setAttribute("href", encodedUri);
         link.setAttribute("download", "customer_data.csv");
+        // Lisätään linkki sivun bodyyn (HTML-dokumenttiin)
         document.body.appendChild(link);
         link.click();
-    }
+    };
 
     return (
         <>
-            <AddCustomer variant="contained" addCustomer={addCustomer} />
+            <AddCustomer variant="outlined" addCustomer={addCustomer} />
             <Button onClick={exportToCSV}>
                 Export to CSV
             </Button>

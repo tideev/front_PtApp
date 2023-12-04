@@ -23,7 +23,7 @@ const CalendarPage = () => {
     start: new Date(training.date),
     end: moment(training.date).add(training.duration, 'minutes').toDate(),
   }));
-  
+
 
   return (
     <div style={{ height: '700px', width: '90%', margin: 'auto' }}>

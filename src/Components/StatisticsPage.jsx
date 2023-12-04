@@ -33,12 +33,22 @@ const StatisticsPage = () => {
         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         barCategoryGap={20}
       >
-        <CartesianGrid horizontal={true} vertical={false} stroke="#ebf3f0" />
-        <XAxis dataKey="activity" />
+        <CartesianGrid 
+          horizontal={true} 
+          vertical={false} 
+          stroke="#ebf3f0" 
+        />
+        <XAxis 
+          dataKey="activity" 
+        />
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="minutes" fill="#8884d8" name="Duration (minutes)"/>
+        <Bar 
+          dataKey="minutes" 
+          fill="#8884d8" 
+          name="Duration (minutes)" 
+        />
       </BarChart>
     </div>
   );

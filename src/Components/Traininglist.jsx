@@ -14,16 +14,16 @@ import EditTraining from "./EditTraining"
 export default function TrainingList() {
     // State variables
     const [trainings, setTrainings] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [selectedTraining, setSelectedTraining] = useState(null);
-  const [customers, setCustomers] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [msg, setMsg] = useState("");
+    const [selectedTraining, setSelectedTraining] = useState(null);
+    const [customers, setCustomers] = useState([]);
 
 
     const dateFormatter = (params) => {
         return dayjs(params.value).format('DD-MM-YYYY HH:mm');
     }
-    
+
 
     // Columns for ag-grid
     const columns = [
@@ -31,18 +31,18 @@ export default function TrainingList() {
         {
             headerName: 'Customer', field: "customer",
             valueGetter: params => {
-              const customer = params.data.customer;
-              if (customer && customer.firstname && customer.lastname) {
-                return `${customer.firstname} ${customer.lastname}`;
-              } else {
-                return ''; 
-              }
+                const customer = params.data.customer;
+                if (customer && customer.firstname && customer.lastname) {
+                    return `${customer.firstname} ${customer.lastname}`;
+                } else {
+                    return '';
+                }
             },
             sortable: true,
             filter: true,
             floatingFilter: true,
-          },
-          
+        },
+
         { field: 'activity', sortable: true, filter: true, floatingFilter: true },
         { field: 'duration', sortable: true, filter: true, floatingFilter: true },
         {
@@ -54,23 +54,23 @@ export default function TrainingList() {
                         handleClose={() => setSelectedTraining(null)}
                         updateTraining={updateTraining}
                     />
-                    <Button size="small" color="info" onClick={() => setSelectedTraining(params.data)}>
+                    <Button size="small" variant="outlined" onClick={() => setSelectedTraining(params.data)}>
                         <EditIcon /> Edit
                     </Button>
                 </>
             ),
-            width: 120
+            width: 130
         },
         {
             cellRenderer: params => (
-                <Button size="small" color="error" onClick={() => deleteTraining(params)}>
+                <Button size="small" color="error" variant="outlined" onClick={() => deleteTraining(params)}>
                     <DeleteIcon /> Delete
                 </Button>
             ),
-            width: 140
+            width: 150
         }
     ];
-    
+
     const getTrainings = () => {
         fetch('https://traineeapp.azurewebsites.net/gettrainings')
             .then(response => response.json())
@@ -81,7 +81,7 @@ export default function TrainingList() {
     }
 
     useEffect(() =>
-    getTrainings(), []);
+        getTrainings(), []);
 
     useEffect(() => {
         getCustomers();
@@ -90,8 +90,8 @@ export default function TrainingList() {
     const url = 'https://traineeapp.azurewebsites.net/api/trainings/';
 
     const deleteTraining = (params) => {
-        if(window.confirm("Are you sure you want to delete this training?")) {
-            fetch(`${url}${params.data.id}`, {method: 'DELETE'})
+        if (window.confirm("Are you sure you want to delete this training?")) {
+            fetch(`${url}${params.data.id}`, { method: 'DELETE' })
                 .then(response => {
                     if (response.ok) {
                         setMsg('Training is deleted successfully!');
@@ -112,12 +112,12 @@ export default function TrainingList() {
             body: JSON.stringify(training)
         })
             .then(response => {
-                if (response.ok){
+                if (response.ok) {
                     setMsg('Training is added successfully!');
                     setOpen(true);
                     getTrainings();
 
-                }else
+                } else
                     alert('Something went wrong.')
             })
             .catch(err => console.error(err));

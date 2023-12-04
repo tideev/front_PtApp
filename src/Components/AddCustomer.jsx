@@ -25,16 +25,16 @@ export default function AddCustomer(props) {
 
     const clearForm = () => {
         setCustomer({
-          firstname: '',
-          lastname: '',
-          streetaddress: '',
-          postcode: '',
-          city: '',
-          email: '',
-          phone: ''
+            firstname: '',
+            lastname: '',
+            streetaddress: '',
+            postcode: '',
+            city: '',
+            email: '',
+            phone: ''
         });
-      };
-      
+    };
+
 
     const handleSave = () => {
         props.addCustomer(customer);
@@ -47,7 +47,7 @@ export default function AddCustomer(props) {
     //dialog
     return (
         <>
-             <Button onClick={() => { setOpen(true); clearForm(); }}>Add New Customer</Button>
+            <Button onClick={() => { setOpen(true); clearForm();}}>Add New Customer</Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>New Customer</DialogTitle>
                 <DialogContent style={{ paddingTop: '20px' }}>

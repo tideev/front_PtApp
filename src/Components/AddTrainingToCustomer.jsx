@@ -26,7 +26,7 @@ export default function AddTrainingToCustomer({ customer, addTraining }) {
       customer: customer,
     });
   };
-  
+
 
   const handleAddTraining = () => {
     // Kutsu addTraining-funktiota, joka on annettu propsina
@@ -45,9 +45,9 @@ export default function AddTrainingToCustomer({ customer, addTraining }) {
 
   return (
     <>
-       <Button size="small" color="primary" onClick={() => { handleOpen(); clearForm(); }}>
-      Add Training
-    </Button>
+      <Button size="small" variant="outlined" onClick={() => { handleOpen(); clearForm(); }}>
+        Add Training
+      </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add Training for {customer.firstname} {customer.lastname}</DialogTitle>
         <DialogContent style={{ paddingTop: '20px' }}>

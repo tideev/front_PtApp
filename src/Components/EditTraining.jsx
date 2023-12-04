@@ -8,7 +8,7 @@ export default function EditTraining(props) {
     useEffect(() => {
         if (props.training) {
             setTraining({
-                date:  dayjs(props.training.date).format('YYYY-MM-DDTHH:mm'),
+                date: dayjs(props.training.date).format('YYYY-MM-DDTHH:mm'),
                 activity: props.training.activity,
                 duration: props.training.duration,
                 customer: props.training.customer
@@ -47,13 +47,31 @@ export default function EditTraining(props) {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField label='Activity' name='activity' value={training.activity} onChange={handleInputChange} fullWidth />
+                        <TextField 
+                            label='Activity' 
+                            name='activity' 
+                            value={training.activity} 
+                            onChange={handleInputChange} 
+                            fullWidth 
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField label='Duration' name='duration' value={training.duration} onChange={handleInputChange} fullWidth />
+                        <TextField 
+                            label='Duration' 
+                            name='duration' 
+                            value={training.duration}  
+                            onChange={handleInputChange} 
+                            fullWidth 
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField label='Customer Name' name='customer' value={training.customer} onChange={handleInputChange} fullWidth />
+                        <TextField
+                            label='Customer Name'
+                            name='customer'
+                            value={`${training.customer.firstname} ${training.customer.lastname}`}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
                     </Grid>
                 </Grid>
             </DialogContent>

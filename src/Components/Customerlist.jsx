@@ -82,21 +82,24 @@ export default function Customerlist() {
 
     }
 
-    const deleteCustomer = (url) => {
+    const deleteCustomer = async (url) => {
         if (window.confirm("Are you sure you want to delete this customer?")) {
-            fetch(url, { method: 'DELETE' })
-                .then(response => {
-                    if (response.ok) {
-                        setMsg('Customer is deleted successfully!');
-                        setOpen(true);
-                        getCustomers();
-                    } else {
-                        alert('Something went wrong in deletion: ' + response.status);
-                    }
-                })
-                .catch(err => console.error(err));
+            try {
+                const response = await fetch(url, { method: 'DELETE' });
+    
+                if (response.ok) {
+                    setMsg('Customer is deleted successfully!');
+                    setOpen(true);
+                    await getCustomers(); // Wait for getCustomers to finish before proceeding
+                } else {
+                    alert('Something went wrong in deletion: ' + response.status);
+                }
+            } catch (err) {
+                console.error(err);
+            }
         }
     }
+    
 
     const addTrainingToCustomer = (customer, training) => {
         const trainingData = {
@@ -150,23 +153,26 @@ export default function Customerlist() {
             .catch(err => console.error(err));
     }
 
-    const updateCustomer = (url, updatedCustomer) => {
-        fetch(url, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedCustomer)
-        })
-            .then(response => {
-                if (response.ok) {
-                    setMsg('Customer is updated successfully!');
-                    setOpen(true);
-                    getCustomers();
-                } else {
-                    alert('Something went wrong in update: ' + response.status);
-                }
-            })
-            .catch(err => console.error(err));
+    const updateCustomer = async (url, updatedCustomer) => {
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedCustomer)
+            });
+    
+            if (response.ok) {
+                setMsg('Customer is updated successfully!');
+                setOpen(true);
+                await getCustomers(); // Wait for getCustomers to finish before proceeding
+            } else {
+                alert('Something went wrong in update: ' + response.status);
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
+    
 
 
     // Funktion määrittely, joka vie asiakastiedot CSV-muotoon

@@ -54,8 +54,13 @@ export default function TrainingList() {
                         handleClose={() => setSelectedTraining(null)}
                         updateTraining={updateTraining}
                     />
-                    <Button size="small" variant="outlined" onClick={() => setSelectedTraining(params.data)}>
-                        <EditIcon /> Edit
+                    <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() => setSelectedTraining(params.data)}
+                    >
+                        <EditIcon />
+                        Edit
                     </Button>
                 </>
             ),
@@ -63,8 +68,14 @@ export default function TrainingList() {
         },
         {
             cellRenderer: params => (
-                <Button size="small" color="error" variant="outlined" onClick={() => deleteTraining(params)}>
-                    <DeleteIcon /> Delete
+                <Button
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                    onClick={() => deleteTraining(params)}
+                >
+                    <DeleteIcon />
+                    Delete
                 </Button>
             ),
             width: 150

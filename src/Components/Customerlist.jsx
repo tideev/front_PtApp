@@ -33,8 +33,8 @@ export default function Customerlist() {
             cellRenderer: params => (
                 <>
                     <AddTrainingToCustomer
-                        customer={params.data} // customer details to the AddTrainingToCustomer component
-                        addTraining={(customer, training) => addTrainingToCustomer(params.data.links[0].href, training)} // function to handle adding training to the customer
+                        customer={params.data} // asiakstiedot AddTrainingToCustomer komponenttii
+                        addTraining={(customer, training) => addTrainingToCustomer(customer, training)} //funktio käsittelemään treenien lisäystä
 
                     />
                 </>
@@ -48,10 +48,15 @@ export default function Customerlist() {
                         customer={params.data}
                         open={selectedCustomer === params.data}
                         handleClose={() => setSelectedCustomer(null)}
-                        updateCustomer={updatedCustomer => updateCustomer(params.data.links[0].href, updatedCustomer)}
+                        updateCustomer={updatedCustomer => updateCustomer(params, updatedCustomer)}
                     />
-                    <Button size="small" variant="outlined" onClick={() => setSelectedCustomer(params.data)}>
-                        <EditIcon /> Edit
+                    <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() => setSelectedCustomer(params.data)}
+                    >
+                        <EditIcon />
+                        Edit
                     </Button>
                 </>
             ),
@@ -59,8 +64,13 @@ export default function Customerlist() {
         },
         {
             cellRenderer: params => (
-                <Button size="small" color="error" variant="outlined" onClick={() => deleteCustomer(params.data.links[0].href)}>
-                    <DeleteIcon /> Delete
+                <Button
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                    onClick={() => deleteCustomer(params)}>
+                    <DeleteIcon />
+                    Delete
                 </Button>
             ),
             width: 150
@@ -82,24 +92,22 @@ export default function Customerlist() {
 
     }
 
-    const deleteCustomer = async (url) => {
+    const deleteCustomer = (params) => {
         if (window.confirm("Are you sure you want to delete this customer?")) {
-            try {
-                const response = await fetch(url, { method: 'DELETE' });
-    
-                if (response.ok) {
-                    setMsg('Customer is deleted successfully!');
-                    setOpen(true);
-                    await getCustomers(); // Wait for getCustomers to finish before proceeding
-                } else {
-                    alert('Something went wrong in deletion: ' + response.status);
-                }
-            } catch (err) {
-                console.error(err);
-            }
+            const customerId = params.data.links[0].href.split('/').pop();
+            fetch(`https://traineeapp.azurewebsites.net/api/customers/${customerId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        setMsg('Customer is deleted successfully!');
+                        setOpen(true);
+                        getCustomers();
+                    } else {
+                        alert('Something went wrong in deletion: ' + response.status);
+                    }
+                })
+                .catch(err => console.error(err));
         }
     }
-    
 
     const addTrainingToCustomer = (customer, training) => {
         const trainingData = {
@@ -153,26 +161,25 @@ export default function Customerlist() {
             .catch(err => console.error(err));
     }
 
-    const updateCustomer = async (url, updatedCustomer) => {
-        try {
-            const response = await fetch(url, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedCustomer)
-            });
-    
-            if (response.ok) {
-                setMsg('Customer is updated successfully!');
-                setOpen(true);
-                await getCustomers(); // Wait for getCustomers to finish before proceeding
-            } else {
-                alert('Something went wrong in update: ' + response.status);
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
-    
+    const updateCustomer = (params, updatedCustomer) => {
+        const customerId = params.data.links[0].href.split('/').pop();
+
+        fetch(`https://traineeapp.azurewebsites.net/api/customers/${customerId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedCustomer)
+        })
+            .then(response => {
+                if (response.ok) {
+                    setMsg('Customer is updated successfully!');
+                    setOpen(true);
+                    getCustomers();
+                } else {
+                    alert('Something went wrong in update: ' + response.status);
+                }
+            })
+            .catch(err => console.error(err));
+    };
 
 
     // Funktion määrittely, joka vie asiakastiedot CSV-muotoon
